@@ -1,4 +1,5 @@
 from django.db import models
+from django.apps import apps
 
 from django_sharding_library.decorators import model_config, shard_storage_config
 from django_sharding_library.models import TableStrategyModel
@@ -39,7 +40,7 @@ class Post(models.Model):
     title = models.CharField(null=False, blank=False, unique=True, max_length=128)
     user_id = models.BigIntegerField(null=False, blank=False)   # 자동으로 테이블을 복제시키는 방법을 몰라서 일단 수동으로 넣는 것으로..(라이브러리에서는 지원 안 함.)
 
-    def get_shard(self):   # 각 Post가 샤드를 갖고 올 수 있도록 get_shard 메소드를 작성. 이건 
+    def get_shard(self):   # 각 Post가 자신의 버켓팅 전략에 맞게 샤드를 갖고 올 수 있도록 get_shard 메소드를 작성. 샤딩할 모델에는 get_shard 메소드를 반드시 작성해야 함.
         shard_group = getattr(self, 'django_sharding__shard_group')
         django_sharding_app = apps.get_app_config('django_sharding')
         bucketer = django_sharding_app.get_bucketer(shard_group)

@@ -9,7 +9,7 @@ class UserGroupBucketingStrategy(BaseBucketingStrategy):
 
     def pick_shard(self, shard_key):
         shard_key = int(shard_key)
-        return self.shards[shard_key % self.max_range]
+        return self.shards[shard_key // self.max_range]
 
     def get_shard(self, shard_key):
         return self.pick_shard(shard_key)
