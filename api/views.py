@@ -52,4 +52,7 @@ class PostViewSet(viewsets.GenericViewSet,
         return Response(PostSerializer(post).data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
-        pass
+        user_id = self.kwargs.get('user_id', None)
+        shard = Post(user_id=user_id).get_shard()
+
+        return Post.objects.using(shard).filter(user_id=user_id)
